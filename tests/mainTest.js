@@ -1,6 +1,7 @@
 const assert = require('assert');
 const fsEx = require('fs-extra');
 const LotusCrawler = require('@tomk79/lotus-crawler');
+const LotusReporter = require(__dirname + '/../node/main.js');
 const lotus = new LotusCrawler({
 	user_agent: 'Mozilla/5.0 Test Agent',
 	ranges: [
@@ -13,6 +14,7 @@ const lotus = new LotusCrawler({
 	},
 });
 let serverProc;
+const lotusReporter = new LotusReporter(lotus);
 
 describe('Starting test server', function() {
 
@@ -52,7 +54,7 @@ describe('Crawling', function() {
 			});
 	});
 
-	it("Crawling", function(done) {
+	it("Crawl", function(done) {
 		this.timeout(60*1000);
 		lotus.crawl()
 			.then(() => {
@@ -65,12 +67,20 @@ describe('Crawling', function() {
 	});
 });
 
-describe('Test', function() {
+describe('Exporting', function() {
 
-	it("Test", function(done) {
+	it("Export", function(done) {
 		this.timeout(60*1000);
-		assert.equal(1, 1);
-		done();
+		this.timeout(60*1000);
+		lotusReporter.export(__dirname + '/app/export/', {
+		})
+			.then(() => {
+				done();
+			})
+			.catch((message) => {
+				console.error(message);
+				done();
+			});
 	});
 
 });
