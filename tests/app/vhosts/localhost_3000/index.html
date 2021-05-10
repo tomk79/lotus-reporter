@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Sample Page</title>
+
+		<!-- contents.css -->
+		<link rel="stylesheet" href="./index_files/contents.css" />
+
+		<!-- Style Element Sample -->
+		<style>
+			body {
+				background-color: #f3f3f3;
+			}
+			.sample-style-element {
+				background-image: url(./index_files/images/sample_style_element.png);
+			}
+			.sample-style-element2 {
+				background-image: url('./index_files/images/sample_style_element2.png');
+			}
+			.sample-style-element3 {
+				background-image: url("./index_files/images/sample_style_element3.png");
+			}
+		</style>
+	</head>
+	<body>
+
+		<h1>Sample Page</h1>
+		<div class="contents">
+			<p>これは、HTMLクローリングのテストのためのサンプルです。</p>
+			<div class="px2-p" style="color: #f93; background-image: url(&quot;./index_files/images/sample_attr_style.png&quot;);">
+				<p><img src="./index_files/images/sample_img_src.png" alt="テストのためのイメージ" /></p>
+			</div>
+			<ul>
+				<li><a href="/testpage/test001.html">testpage/test001.html</a></li>
+				<li><a href="./testpage/test002.html">testpage/test002.html</a></li>
+				<li><a href="././testpage/getparam_test.html?a=b&c=d">testpage/getparam_test.html?a=b&c=d</a></li>
+			</ul>
+
+			<h2>Ignored Links</h2>
+			<ul>
+				<li><a href="https://127.0.0.1:3010/" target="_blank">https://127.0.0.1:3010/</a></li>
+			</ul>
+
+			<h2>Dynamic Page Links</h2>
+			<ul>
+				<li><a href="/dynamic_page" target="_blank">/dynamic_page</a></li>
+				<li><a href="/redirect/301from">/redirect/301from</a></li>
+				<li><a href="/redirect/302from">/redirect/302from</a></li>
+				<li><a href="/redirect/307from">/redirect/307from</a></li>
+				<li><a href="/redirect/308from">/redirect/308from</a></li>
+			</ul>
+
+		</div>
+
+
+		<!-- jQuery -->
+		<script src="./libs/scripts/jquery-3.4.1.min.js"></script>
+
+		<!-- contents.js -->
+		<script src="./index_files/contents.js"></script>
+
+	</body>
+</html>
