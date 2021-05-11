@@ -8,6 +8,7 @@ module.exports = function( main ){
 	this.path_export_to = null;
 	this.export_options = {};
 
+	let contents_count = 0;
 
 	/**
 	 * エクスポートを開始する
@@ -36,56 +37,47 @@ module.exports = function( main ){
 				this.export_options = export_options;
 
 				// console.log( path_export_to );
-
-				do_export(function(){
-					rlv();
-				});
-
 			} catch(e){
 				rjt( 'Failed to Export:' + e.message );
 				return;
 			}
 
+			it79.fnc({}, [
+				function( it1 ){
+					// 総ファイル数を取得
+					main.count().then((result) => {
+						console.log('Total count:', result);
+						contents_count = result;
+						it1.next();
+					});
+				},
+				function(it1){
+					main.each( function( uriInfo, next ){
+						export_one(uriInfo)
+							.then( () => {
+								next();
+							} )
+						;
+					} )
+						.then( () => {
+							it1.next();
+						} );
+
+				},
+				function(it1){
+					// index.html を生成
+					generate_index()
+						.then( () => {
+							it1.next();
+						} );
+				},
+				function(){
+					rlv();
+				}
+			]);
 		});
 	}
 
-
-	/**
-	 * 出力を実行する
-	 */
-	function do_export( callback ){
-		console.log(_this.path_export_to);
-		console.log(_this.export_options);
-
-		let count = 0;
-		let list = [];
-
-		it79.fnc({}, [
-			function( it1 ){
-				main.count().then((result) => {
-					console.log('Total count:', result);
-					count = result;
-					it1.next();
-				});
-			},
-			function( it1 ){
-				main.each( function( uriInfo, next ){
-					export_one(uriInfo)
-						.then( () => {
-							next();
-						} )
-					;
-				} )
-					.then( () => {
-						it1.next();
-					} );
-			},
-			function( it1 ){
-				callback();
-			}
-		]);
-
-	}
 
 
 	/**
@@ -153,6 +145,58 @@ module.exports = function( main ){
 
 					let bin = (new Buffer(urlInfo.response_body_base64, 'base64'));
 					fs.writeFileSync( _this.path_export_to + newFilePath, bin, {} );
+
+					it1.next();
+				},
+				function(){
+					console.log();
+					rlv();
+				}
+			]);
+
+		});
+	}
+
+	/**
+	 * index.html を生成する
+	 */
+	async function generate_index(){
+		return new Promise( (rlv, rjt) => {
+
+			it79.fnc({}, [
+				function(it1){
+					fsEx.mkdirpSync(_this.path_export_to);
+					fsEx.mkdirpSync(_this.path_export_to + '/index_files/');
+					it1.next();
+				},
+				function(it1){
+					fsEx.copySync(
+						__dirname + '/../../dist/lotus-reporter.js',
+						_this.path_export_to + '/index_files/lotus-reporter.js'
+					);
+					fsEx.copySync(
+						__dirname + '/../../dist/lotus-reporter.css',
+						_this.path_export_to + '/index_files/lotus-reporter.css'
+					);
+					it1.next();
+				},
+				function(it1){
+					// console.log(newFilePath);
+
+					let bin = '';
+					bin += '<!DOCTYPE html>'+"\n";
+					bin += '<html>'+"\n";
+					bin += '<head>'+"\n";
+					bin += '<meta charset="utf-8" />'+"\n";
+					bin += '<title>Lotus Reporter</title>'+"\n";
+					bin += '<link rel="stylesheet" href="./index_files/lotus-reporter.css" />'+"\n";
+					bin += '</head>'+"\n";
+					bin += '<body>'+"\n";
+					bin += '<p>TODO: 開発中; count: '+ contents_count +'</p>'+"\n";
+					bin += '<script src="./index_files/lotus-reporter.js"></script>'+"\n";
+					bin += '</body>'+"\n";
+					bin += '</html>'+"\n";
+					fs.writeFileSync( _this.path_export_to + '/index.html', bin, {} );
 
 					it1.next();
 				},
