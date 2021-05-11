@@ -125,7 +125,7 @@ module.exports = function( main ){
 
 					let tmpHostName = urlInfo.host.split(/[^a-zA-Z0-9\_\-\.]/).join('___');
 
-					dirname_hostname = urlInfo.scheme + '---' + tmpHostName;
+					dirname_hostname = 'index_files/' + urlInfo.scheme + '---' + tmpHostName;
 
 					parsedUrl = new URL(urlInfo.scheme + '://' + urlInfo.host + urlInfo.path);
 					// console.log( parsedUrl );
